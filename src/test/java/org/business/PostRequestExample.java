@@ -1,33 +1,29 @@
 package org.business;
 
-import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
-import io.restassured.specification.RequestSpecification;
+import org.utility.RequestHelper;
 
 public class PostRequestExample {
     public static void main(String[] args) {
-        // Define the base URL of the API
-        RestAssured.baseURI = "https://reqres.in";
+        // Create an instance of RequestHelper with the base URI
+        RequestHelper requestHelper = new RequestHelper("https://reqres.in");
 
-        // Create a request specification
-        RequestSpecification request = RestAssured.given();
-
-        // Define the request body (JSON payload)
-        String requestBody = "{\n" +
-                "    \"name\": \"morpheus\",\n" +
-                "    \"job\": \"leader\"\n" +
-                "}";
-
+        // Set the base path (the specific API endpoint)
+        requestHelper.setBasePath("/api/users");
 
         // Set the content type
-        request.contentType(ContentType.JSON);
+        requestHelper.setContentType(ContentType.JSON);
 
-        // Set the request body
-        request.body(requestBody);
+        // Set the request body (JSON payload)
+        String requestBody = "{\n" +
+                "    \"name\": \"John\",\n" +
+                "    \"job\": \"leader\"\n" +
+                "}";
+        requestHelper.setRequestBody(requestBody);
 
-        // Send a POST request to a specific endpoint
-        Response response = request.post("/api/users");
+        // Send a POST request
+        Response response = requestHelper.sendPostRequest();
 
         // Get and print the response body
         String responseBody = response.getBody().asString();
